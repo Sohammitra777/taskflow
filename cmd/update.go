@@ -17,7 +17,11 @@ func HandleUpdate(filename string, args []string) {
 	}
 
 	id, err := strconv.Atoi(args[1])
-	utils.PrintErr(err)
+	if err != nil {
+		fmt.Println("Invlid ID format")
+		return
+	}
+	
 	desc := strings.Join(args[2:], " ")
 
 	err = service.UpdateTask(filename, desc, id)

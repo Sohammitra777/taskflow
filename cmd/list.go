@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"todo.go/cmd/list"
+	"todo.go/model"
 	"todo.go/service"
 	"todo.go/utils"
 )
@@ -18,16 +18,20 @@ func HandleList(filename string, args []string) {
 		return
 	}
 
-	switch args[1] {
-	case "todo":
-		list.HandleListTodo(filename)
-	case "in-progress":
-		list.HandleListInProgress(filename)
-	case "done":
-		list.HandleListDone(filename)
-	default:
-		fmt.Println("No such subcommand exist")
-
+	var listFilters = map[string]model.Status{
+		"todo":        model.StatusNotDone,
+		"in-progress": model.StatusInProgress,
+		"done":        model.StatusDone,
 	}
+
+	if status, ok := listFilters[args[1]]; ok {
+		tasks, err := service.ListByStatus(filename, status)
+		utils.PrintErr(err)
+
+		utils.PrintTaskList(tasks)
+		return
+	}
+
+	fmt.Println("Invalid command")
 
 }

@@ -20,7 +20,7 @@ func ListTask(filename string) ([]model.Task, error) {
 	return tasks, nil
 }
 
-func TaskListTodo(filename string) ([]model.Task, error) {
+func ListByStatus(filename string, status model.Status) ([]model.Task, error) {
 
 	var todoTasks []model.Task
 	tasks, err := repo.GetTasks(filename)
@@ -29,41 +29,7 @@ func TaskListTodo(filename string) ([]model.Task, error) {
 	}
 
 	for _, t := range tasks {
-		if t.Status == model.StatusNotDone {
-			todoTasks = append(todoTasks, t)
-		}
-	}
-
-	return todoTasks, nil
-}
-
-func TaskListInProgress(filename string) ([]model.Task, error) {
-
-	var todoTasks []model.Task
-	tasks, err := repo.GetTasks(filename)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, t := range tasks {
-		if t.Status == model.StatusInProgress {
-			todoTasks = append(todoTasks, t)
-		}
-	}
-
-	return todoTasks, nil
-}
-
-func TaskListDone(filename string) ([]model.Task, error) {
-
-	var todoTasks []model.Task
-	tasks, err := repo.GetTasks(filename)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, t := range tasks {
-		if t.Status == model.StatusDone {
+		if t.Status == status {
 			todoTasks = append(todoTasks, t)
 		}
 	}
@@ -105,6 +71,34 @@ func UpdateTask(filename, desc string, id int) error {
 	for i, t := range tasks {
 		if t.ID == id {
 			tasks[i].Desc = desc
+			tasks[i].UpdatedAt = time.Now()
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		return ErrTaskNotFound
+	}
+
+	err = repo.StoreFile(filename, tasks)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func MarkTaskStatusById(filename string, status model.Status, id int) error {
+	tasks, err := repo.GetTasks(filename)
+	if err != nil {
+		return err
+	}
+
+	found := false
+	for i, t := range tasks {
+		if t.ID == id {
+			tasks[i].Status = status
 			tasks[i].UpdatedAt = time.Now()
 			found = true
 			break

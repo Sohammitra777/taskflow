@@ -26,7 +26,10 @@ func HandleDelete(filename string, args []string) {
 	}
 
 	id, err := strconv.Atoi(args[1])
-	utils.PrintErr(err)
+	if err != nil {
+		fmt.Println("Invlid ID format")
+		return
+	}
 
 	task, err := service.DeleteTask(filename, id)
 	if err != nil {

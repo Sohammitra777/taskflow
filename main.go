@@ -14,7 +14,7 @@ func main() {
 
 	args := os.Args[1:]
 
-	if len(args) < 1 {
+	if len(args) == 0 {
 		fmt.Println("Use -help to determine the working of the cli")
 		return
 	}
@@ -24,14 +24,13 @@ func main() {
 		cmd.HandleList(filename, args)
 	case "add":
 		cmd.HandleAdd(filename, args)
-
 	case "update":
 		cmd.HandleUpdate(filename, args)
-
 	case "delete":
 		cmd.HandleDelete(filename, args)
+	case "mark":
+		cmd.HandleMark(filename, args)
 	default:
 		fmt.Println("No such command exists")
-
 	}
 }
