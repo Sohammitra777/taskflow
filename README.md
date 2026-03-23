@@ -1,4 +1,4 @@
-# 📘 Taskflow CLI
+# 📘 Taskflow CLI (Go • Fully Type-Safe)
 
 ## 🧠 Overview
 
@@ -26,7 +26,7 @@ go run main.go
 ## 🚀 Usage
 
 ```bash
-todo <command>
+taskflow <command>
 ```
 
 ---
@@ -59,7 +59,7 @@ Each command has detailed documentation and sequence diagrams:
 ## 🆘 Help
 
 ```bash
-todo help
+taskflow help
 ```
 
 Displays all available commands and usage instructions.
